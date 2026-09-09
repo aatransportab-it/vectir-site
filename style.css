@@ -249,3 +249,17 @@
     .claims > div:nth-child(3) { animation-range: entry 8% entry 65%; }
   }
 }
+
+/* ---------- The fan of beams ----------
+   Additive light over the photograph: screen blending so it can only ever add,
+   which is the one thing a laser can do and the one thing it cannot undo. */
+
+#heroBeams {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; mix-blend-mode: screen;
+
+  /* The beams belong in the air over the building, not across the reader's
+     eye: the layer is masked away where the title and the line of copy sit. */
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 38%, rgba(0,0,0,.30) 70%, rgba(0,0,0,.06) 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 38%, rgba(0,0,0,.30) 70%, rgba(0,0,0,.06) 100%);
+}
