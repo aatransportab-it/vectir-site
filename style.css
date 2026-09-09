@@ -263,3 +263,34 @@
   -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 38%, rgba(0,0,0,.30) 70%, rgba(0,0,0,.06) 100%);
   mask-image: linear-gradient(180deg, #000 0%, #000 38%, rgba(0,0,0,.30) 70%, rgba(0,0,0,.06) 100%);
 }
+
+/* ---------- Price ---------- */
+
+.price h2 { color: var(--gold); }
+.price p { max-width: 36rem; }
+
+/* ---------- Reaching a person ---------- */
+
+.reach {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.6rem;
+  margin-top: 1.6rem; font-size: 1.05rem;
+}
+/* .contact a paints every link gold; on the filled button that is gold on gold. */
+.reach .go { text-decoration: none; color: #17140A; border-bottom: 0; }
+.reach .go:hover { color: #17140A; }
+.who { margin-top: 1.4rem; color: var(--muted); font-size: .95rem; max-width: 34rem; }
+
+/* ---------- Page-to-page ----------
+   The move to the simulator is a cross-fade instead of a white flash. Browsers
+   without it navigate exactly as before. */
+
+@view-transition { navigation: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Fewer orphans and better break points, everywhere it is supported. */
+p, li, dd, figcaption { text-wrap: pretty; }
