@@ -208,3 +208,44 @@
     border: 1px solid var(--edge); border-left: 3px solid var(--gold); border-radius: 3px; }
   .whole p { margin: 0; font-size: 1.05rem; max-width: 36rem; }
   .whole strong { color: var(--gold); font-weight: 600; }
+
+/* ---------- The traced wordmark ---------- */
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px;
+  padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+#heroLaser { cursor: pointer;
+  display: block; width: 100%; height: clamp(3rem, 11vw, 9rem);
+  margin: 0 0 .3rem -1.5%;
+}
+
+/* ---------- Scroll-driven reveals ----------
+   Native in every current browser: the animation is driven by the element's
+   own position in the viewport, on the compositor, so it costs nothing on the
+   main thread and holds 60fps on a phone.
+
+   The range ends early and fills forwards, so a section is fully readable well
+   before it reaches the middle of the screen - a reveal that needs scrolling to
+   finish is a reveal that hides content. */
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    main > section {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 42%;
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(1.6rem); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* The three figures count in one after another rather than as a block. */
+    .claims > div { animation: rise linear both; animation-timeline: view();
+      animation-range: entry 0% entry 55%; }
+    .claims > div:nth-child(2) { animation-range: entry 4% entry 60%; }
+    .claims > div:nth-child(3) { animation-range: entry 8% entry 65%; }
+  }
+}
