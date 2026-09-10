@@ -36,15 +36,22 @@
     <p class="punch">Ăsta e lucrul care se cumpără. Nu aparatul, nu figurile — <strong>momentul.</strong></p>
   </section>
 
-  <section>
+  <section class="what">
+    <div>
     <p class="kicker">Ce este</p>
     <h2>Toată lumea rulează aceleași figuri. Noi desenăm numele.</h2>
     <p class="lead">Un spectacol laser obișnuit trece prin aceeași bibliotecă: tuneluri, valuri,
       spirale. Frumoase, și identice de la un eveniment la altul.
       <strong>Noi scriem numele dumneavoastră</strong> — al artistului, al firmei, al orașului —
       cu litere calculate ca să se citească de la distanța de la care se uită lumea.</p>
-    <p class="muted">Sigla dintr-un fișier vectorial. Stema oficială a unei localități. Un mesaj
-      scris în ziua evenimentului. Se schimbă din program în câteva minute, nu din echipament.</p>
+    <p><strong>Și nu doar un nume.</strong> Textul se derulează: o strofă, o colindă, urarea
+      primarului, numele invitaților de onoare — rând după rând, cât ține seara. Pe zid încape
+      o poezie întreagă, nu doar un cuvânt.</p>
+    <p class="muted">Sigla dintr-un fișier vectorial. Stema oficială a localității, așa cum o are
+      primăria. Un mesaj scris în ziua evenimentului. Se schimbă din program în câteva minute, nu
+      din echipament.</p>
+    </div>
+    <canvas id="verse" aria-hidden="true"></canvas>
   </section>
 
   <section>
@@ -90,6 +97,8 @@
     <p class="kicker">Pentru ce</p>
     <h2>O tehnologie, toată piața.</h2>
     <div class="uses">
+      <div><h3>Iluminat festiv de oraș</h3><p>Stema orașului pe primărie, de la 1 decembrie până
+        după Bobotează. Oamenii se opresc s-o filmeze.</p></div>
       <div><h3>Concerte</h3><p>Numele lui, mare cât scena, în secunda dinaintea primului acord.
         Pe urmă fasciculele intră pe refren, din stânga și din dreapta.</p></div>
       <div><h3>Festivaluri</h3><p>Fiecare cap de afiș își primește numele între seturi. Publicul
@@ -115,8 +124,6 @@
         repetă din oră în oră.</p></div>
       <div><h3>Nunți și aniversări</h3><p>Numele lor, pe fațada locației, când ies afară. Aia e
         poza care ajunge la toată lumea a doua zi.</p></div>
-      <div><h3>Iluminat festiv de oraș</h3><p>Stema orașului pe primărie, de la 1 decembrie până
-        după Bobotează. Oamenii se opresc s-o filmeze.</p></div>
     </div>
   </section>
 
@@ -143,9 +150,10 @@
 
   <section>
     <div class="claims">
-      <div><span class="n">26</span><h3>Scene, fiecare cu bugetul ei măsurat</h3>
-        <p>Nu o bibliotecă de animații cumpărate. Fiecare scenă știe câte puncte costă și câte
-          cadre pe secundă scoate pe aparatul din dotare.</p></div>
+      <div><span class="n">0</span><h3>Scene cumpărate dintr-o bibliotecă</h3>
+        <p>Toate se generează în motor propriu, pentru evenimentul respectiv — câte cere seara,
+          atâtea sunt. Fiecare știe câte puncte costă și câte cadre pe secundă scoate pe aparatul
+          din dotare.</p></div>
       <div><span class="n">40 000</span><h3>De puncte pe secundă, la 8° ILDA</h3>
         <p>Unghiul contează. O cifră de kpps fără unghiul la care a fost măsurată nu înseamnă
           nimic — și de obicei e aleasă tocmai pentru că nu înseamnă.</p></div>
@@ -283,6 +291,7 @@
 <script src="glyphs.js"></script>
 <script src="hero.js"></script>
 <script src="beams.js"></script>
+<script src="verse.js"></script>
 <script src="sim.js"></script>
 <script src="link.js"></script>
 </body>
