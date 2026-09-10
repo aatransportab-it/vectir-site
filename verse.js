@@ -101,18 +101,32 @@
     ctx.globalAlpha = 1;
   }
 
-  function blazon(cx, cy, halfW, halfH, alpha) {
+  /* The blazon is built around the text it carries, not around the slot: pad the
+     measured word, then lift the whole shape so its bounding box - point
+     included - is centred on the line. Otherwise the point hangs below and the
+     crest reads as if it had slipped. */
+  function blazon(cx, cy, textHalfW, textHalfH, alpha) {
+    // All measured in half text heights, so the frame scales with the word.
+    const u = textHalfH;
+    // The body is what has to sit around the letters; the point is allowed to
+    // hang below, the way a crest hangs. A small lift keeps the row balanced.
+    const lift = u * 0.3;
+    const halfW = textHalfW + u * 1.2;
+    const top = cy - u * 1.9 - lift;
+    const shoulder = cy + u * 1.9 - lift;
+    const point = cy + u * 3.3 - lift;
+
     ctx.strokeStyle = `rgb(${ICE[0]},${ICE[1]},${ICE[2]})`;
     ctx.lineCap = ctx.lineJoin = 'round';
     for (const pass of [[0.18 * alpha, 5], [alpha * 0.8, 1.5]]) {
       ctx.globalAlpha = pass[0];
       ctx.lineWidth = pass[1] * dpr;
       ctx.beginPath();
-      ctx.moveTo(cx - halfW, cy - halfH);
-      ctx.lineTo(cx + halfW, cy - halfH);
-      ctx.lineTo(cx + halfW, cy + halfH * 0.15);
-      ctx.lineTo(cx, cy + halfH);
-      ctx.lineTo(cx - halfW, cy + halfH * 0.15);
+      ctx.moveTo(cx - halfW, top);
+      ctx.lineTo(cx + halfW, top);
+      ctx.lineTo(cx + halfW, shoulder);
+      ctx.lineTo(cx, point);
+      ctx.lineTo(cx - halfW, shoulder);
       ctx.closePath();
       ctx.stroke();
     }
@@ -140,8 +154,10 @@
       const d = Math.abs(cy - h / 2) / (h / 2);
       const alpha = Math.max(0.22, 1 - d * 0.8);
 
-      const size = Math.min((w * 0.82) / it.span, lh * 0.42);
-      if (it.shield) blazon(w / 2, cy, size * it.span * 0.56, lh * 0.34, alpha);
+      // A crested line has to leave room for its own frame, so it is set smaller.
+      const room = it.shield ? 0.62 : 0.82;
+      const size = Math.min((w * room) / it.span, lh * (it.shield ? 0.30 : 0.42));
+      if (it.shield) blazon(w / 2, cy, (size * it.span) / 2, size / 2, alpha);
       stroke(it.pts, size, w / 2, cy, it.c, alpha);
     }
 
