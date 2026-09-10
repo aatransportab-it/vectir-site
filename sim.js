@@ -9,11 +9,12 @@
  *
  * Two departures from the machine, both deliberate:
  *
- *   - The pass is slowed to about a second. At 40 000 points a second the head
- *     completes sixty times over before the eye catches it, and the effect -
- *     a solid glowing word - hides the one thing worth showing here.
- *   - Persistence is longer than a wall's. A screen has no phosphor and no
- *     haze, so the trail has to be carried in the canvas instead.
+ *   - The pass is slowed to about a second and a half. At 40 000 points a
+ *     second the head completes sixty times over before the eye catches it,
+ *     and the effect - a solid glowing word - hides the one thing worth
+ *     showing here.
+ *   - The word is then held lit before it retraces, so a visitor reads his own
+ *     name instead of chasing the dot.
  */
 (function () {
   const canvas = document.getElementById('sim');
@@ -22,13 +23,14 @@
 
   const ctx = canvas.getContext('2d');
   const ADVANCE = 5.6 / 6;          // glyph width + spacing, in size-1 units
-  const PASS_SECONDS = 1.15;        // one full retrace
-  const FADE = 0.16;                // per-frame veil; the afterglow
+  const PASS_SECONDS = 1.5;         // one full trace
+  const HOLD_SECONDS = 1.6;         // lit, readable, before it retraces
+  const HEAD = 12;                  // points still glowing hot behind the beam
   const GROUND = '#0A0F1E';
 
   let points = [];                  // { x, y, lit }
-  let cursor = 0;
-  let last = performance.now();
+  let spanX = 1, spanY = 1;         // the word's own extent, measured at build
+  let t0 = 0;                       // start of the current trace-then-hold cycle
   let dpr = 1;
 
   /** Lay the text out as one ordered point list, blanked jumps included. */
@@ -54,6 +56,16 @@
       }
       x += ADVANCE * scale;
     }
+
+    // A word is many glyphs wide and one tall, so width is what binds. Measure
+    // it instead of guessing, or a short name sits tiny in a wide box.
+    let lox = Infinity, hix = -Infinity, loy = Infinity, hiy = -Infinity;
+    for (const p of out) {
+      if (p.x < lox) lox = p.x; if (p.x > hix) hix = p.x;
+      if (p.y < loy) loy = p.y; if (p.y > hiy) hiy = p.y;
+    }
+    spanX = Math.max(1e-3, hix - lox);
+    spanY = Math.max(1e-3, hiy - loy);
     return out;
   }
 
@@ -79,49 +91,49 @@
     return `rgb(${Math.round(a[0] + (b[0] - a[0]) * t)},${Math.round(a[1] + (b[1] - a[1]) * t)},${Math.round(a[2] + (b[2] - a[2]) * t)})`;
   }
 
+  /* Progress comes from the clock, not from accumulated frame deltas, so the
+     pass lasts the same time on a phone at 12fps as on a desktop at 120. */
   function frame(now) {
-    const dt = Math.min(0.05, (now - last) / 1000);
-    last = now;
     resize();
 
     const w = canvas.width, h = canvas.height;
-    const size = Math.min(w, h) * 0.94;
+    const size = Math.min((w * 0.92) / spanX, (h * 0.74) / spanY);
     const cx = w / 2, cy = h / 2;
 
-    // The veil is the persistence. Everything drawn earlier dims by a fixed
-    // fraction each frame, which is what a phosphor - or an eye - does.
     ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = `rgba(10,15,30,${FADE})`;
+    ctx.fillStyle = GROUND;
     ctx.fillRect(0, 0, w, h);
 
     if (points.length > 1) {
-      const step = (points.length / PASS_SECONDS) * dt;
-      const from = cursor;
-      const to = cursor + step;
+      if (!t0) t0 = now;
+      const elapsed = (now - t0) / 1000;
+      if (elapsed >= PASS_SECONDS + HOLD_SECONDS) t0 = now;
+
+      const drawing = elapsed < PASS_SECONDS;
+      const upto = drawing
+        ? Math.floor((elapsed / PASS_SECONDS) * (points.length - 1))
+        : points.length - 1;
 
       ctx.globalCompositeOperation = 'lighter';
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
 
-      for (let i = Math.floor(from); i < to; i++) {
-        const a = points[((i % points.length) + points.length) % points.length];
-        const b = points[(((i + 1) % points.length) + points.length) % points.length];
+      for (let i = 0; i < upto; i++) {
+        const a = points[i], b = points[i + 1];
         if (!b.lit) continue;             // a blanked jump draws nothing
-        const u = (((i % points.length) + points.length) % points.length) / points.length;
-        const color = colorAt(u);
         const px = (p) => cx + p.x * size, py = (p) => cy - p.y * size;
+        const hot = drawing && i > upto - HEAD;
 
-        ctx.strokeStyle = color;
-        ctx.globalAlpha = 0.16;
-        ctx.lineWidth = 7 * dpr;
+        ctx.strokeStyle = colorAt(i / points.length);
+        ctx.globalAlpha = hot ? 0.30 : 0.16;
+        ctx.lineWidth = (hot ? 10 : 7) * dpr;
         ctx.beginPath(); ctx.moveTo(px(a), py(a)); ctx.lineTo(px(b), py(b)); ctx.stroke();
 
         ctx.globalAlpha = 1;
-        ctx.lineWidth = 1.7 * dpr;
+        ctx.lineWidth = (hot ? 2.2 : 1.7) * dpr;
         ctx.beginPath(); ctx.moveTo(px(a), py(a)); ctx.lineTo(px(b), py(b)); ctx.stroke();
       }
       ctx.globalAlpha = 1;
-      cursor = to % points.length;
     }
 
     requestAnimationFrame(frame);
@@ -129,7 +141,7 @@
 
   function retext() {
     points = build(input.value || 'ORAȘUL DUMNEAVOASTRĂ');
-    cursor = 0;
+    t0 = 0;   // a new name starts its own pass
   }
 
   input.addEventListener('input', retext);
