@@ -140,7 +140,7 @@
   }
 
   function retext() {
-    points = build(input.value || 'ORAȘUL DUMNEAVOASTRĂ');
+    points = build(input.value || 'NUMELE ORAȘULUI SAU AL COMPANIEI');
     t0 = 0;   // a new name starts its own pass
   }
 
