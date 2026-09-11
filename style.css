@@ -221,6 +221,12 @@
   margin: 0 0 .3rem -1.5%;
 }
 
+/* On a phone the canvas box is short, so the word ends up almost touching the
+   line under it. Give it air there, where the box cannot. */
+@media (max-width: 34rem) {
+  #heroLaser { margin-bottom: .9rem; }
+}
+
 /* ---------- Scroll-driven reveals ----------
    Native in every current browser: the animation is driven by the element's
    own position in the viewport, on the compositor, so it costs nothing on the
