@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Câte zile până la Revelion? Numărătoare inversă desenată cu laser | Luceafărul</title>
+<meta name="description" content="Câte zile, ore și secunde mai sunt până la Revelion, ora României. Numărătoare inversă în timp real, desenată cu același font cu care proiectorul nostru scrie pe clădiri.">
+<link rel="canonical" href="https://vectir.ro/revelion/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ro_RO">
+<meta property="og:site_name" content="Luceafărul">
+<meta property="og:title" content="Câte zile până la Revelion? Numărătoarea desenată cu laser">
+<meta property="og:description" content="Zile, ore și secunde până la miezul nopții, ora României. Deschideți și urmăriți raza.">
+<meta property="og:url" content="https://vectir.ro/revelion/">
+<meta property="og:image" content="https://vectir.ro/img/og-revelion.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/style.css">
+<style>
+  .count { position: relative; height: min(78vh, 46rem); min-height: 22rem; border-bottom: 1px solid var(--edge);
+    background: radial-gradient(ellipse at 50% 55%, #121a33 0%, var(--night) 70%); }
+  #laser { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .count .note { position: absolute; left: 0; right: 0; bottom: 1rem; text-align: center;
+    color: var(--muted); font-size: .85rem; margin: 0 auto; }
+  .readout { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://vectir.ro/revelion/","url":"https://vectir.ro/revelion/","name":"Câte zile până la Revelion? Numărătoare inversă desenată cu laser","inLanguage":"ro","about":{"@id":"https://vectir.ro/#firma"}},{"@type":"LocalBusiness","@id":"https://vectir.ro/#firma","name":"Luceafărul","url":"https://vectir.ro/","telephone":"+40741447101","address":{"@type":"PostalAddress","addressLocality":"Petroșani","addressRegion":"Hunedoara","addressCountry":"RO"}}]}</script>
+</head>
+<body style="margin:0">
+
+<header class="top"><div class="shell">
+  <a class="home" href="/">Luce<span>a</span>fărul</a>
+  <nav aria-label="Pagini"><a href="/iluminat-festiv-laser/">Iluminat festiv</a><a href="/alternativa-artificii/">În loc de artificii</a><a href="/revelion/" aria-current="page">Numărătoarea</a></nav>
+</div></header>
+
+<div class="count">
+  <canvas id="laser" aria-hidden="true"></canvas>
+  <p class="note">Ora României · desenat cu fontul proiectorului, o singură rază</p>
+</div>
+
+<main class="shell">
+  <div class="page-head">
+    <h1>Câte zile până la Revelion</h1>
+    <p class="lead readout" id="readout">Mai sunt câteva zile până la Revelion.</p>
+    <p class="muted">Numărătoarea de mai sus merge în timp real, după ora României, și se reia singură
+      în fiecare an. Literele sunt desenate cu același font cu care proiectorul nostru scrie pe clădiri:
+      fiecare cifră e un singur traseu de rază, fără umpluturi.</p>
+  </div>
+
+  <section>
+    <p class="kicker">Pentru primării</p>
+    <h2>Numărătoarea asta, pe o clădire din piața dumneavoastră.</h2>
+    <p class="lead">La miezul nopții, cifrele se scriu cu laser pe primărie sau pe casa de cultură, urmate
+      de „La mulți ani” și de numele orașului. Fără zgomot și fără fum, iar fasciculele cad pe clădire, nu
+      peste oameni.</p>
+    <p>Tot mai multe orașe renunță la artificii de Revelion. Vedeți <a href="/alternativa-artificii/" style="color:var(--gold)">ce
+      au ales în 2026 și ce merge prost pe ceață</a>.</p>
+  </section>
+
+  <section class="contact">
+    <p class="kicker">Contact</p>
+    <h2>Cereți o ofertă pentru Revelion.</h2>
+    <p>Trimiteți localitatea și clădirea. Înainte de orice contract, o seară de probă pe zidul dumneavoastră.</p>
+    <div class="reach">
+      <a class="go" href="https://wa.me/40741447101?text=Bun%C4%83%20ziua.%20A%C8%99%20vrea%20o%20ofert%C4%83%20pentru%20num%C4%83r%C4%83toarea%20de%20Revelion%20cu%20laser." rel="noopener">Scrieți pe WhatsApp</a>
+      <a href="mailto:lucian@helpix.ro?subject=Luceaf%C4%83rul%20%E2%80%94%20Revelion">lucian@helpix.ro</a>
+      <a href="tel:+40741447101">+40 741 447 101</a>
+    </div>
+  </section>
+
+  <footer>
+    Luceafărul — laser show personalizat și iluminat festiv cu laser.<br>
+    CUI 52996493 · J2025092166007 · Petroșani, județul Hunedoara.
+  </footer>
+</main>
+
+<script src="/glyphs.js"></script>
+<script>
+/*
+ * A live countdown to midnight, Romanian time, drawn the way the projector draws:
+ * single-stroke glyphs, additive colour, a soft bloom where the beam sits on the wall.
+ * The target is computed from the clock every frame, so the page is never stale and
+ * rolls over to the next year on its own.
+ */
+(function () {
+  const canvas = document.getElementById('laser');
+  const readout = document.getElementById('readout');
+  if (!canvas || typeof GLYPHS === 'undefined') return;
+  const ctx = canvas.getContext('2d');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ADV = 5.6 / 6;
+
+  // Midnight in Bucharest is 22:00 UTC on 31 December (EET, UTC+2, no DST in winter).
+  function target(now) {
+    const y = new Date(now).getUTCFullYear();
+    let t = Date.UTC(y, 11, 31, 22, 0, 0);
+    // Keep greeting for the first day of the new year, then count to the next one.
+    if (now >= t + 86400000) t = Date.UTC(y + 1, 11, 31, 22, 0, 0);
+    return t;
+  }
+  const pad = (n) => String(n).padStart(2, '0');
+
+  function lines(now) {
+    const t = target(now);
+    const left = t - now;
+    if (left <= 0) {
+      const year = new Date(t + 3600000 * 3).getUTCFullYear();
+      readout.textContent = `La mulți ani ${year}!`;
+      return [['LA MULȚI ANI', 0.13], [String(year) + '!', 0.3]];
+    }
+    const s = Math.floor(left / 1000);
+    const d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), sec = s % 60;
+    readout.textContent = `Mai sunt ${d} ${d === 1 ? 'zi' : 'zile'}, ${h} ore, ${m} minute și ${sec} secunde până la Revelion, ora României.`;
+    return [['PÂNĂ LA REVELION', 0.075], [`${d} ${d === 1 ? 'ZI' : 'ZILE'}`, 0.2], [`${pad(h)}:${pad(m)}:${pad(sec)}`, 0.15]];
+  }
+
+  function layout(text, size, cy, W, H) {
+    const chars = [...text];
+    const span = chars.length * ADV;
+    let k = size * Math.min(W, H * 0.95);
+    if (span * k > W * 0.9) k = W * 0.9 / span;
+    let x = W / 2 - span * k / 2 + ADV * k / 2;
+    const out = [];
+    chars.forEach((ch) => {
+      const g = GLYPHS[ch];
+      if (g) for (const stroke of g) {
+        const u = (x - (W / 2 - span * k / 2)) / (span * k);
+        out.push({ u, pts: stroke.map((p) => [x + p[0] * k, cy - p[1] * k]) });
+      }
+      x += ADV * k;
+    });
+    return { out, k };
+  }
+
+  let dpr = 1;
+  function resize() {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    const r = canvas.getBoundingClientRect();
+    canvas.width = Math.max(1, Math.round(r.width * dpr));
+    canvas.height = Math.max(1, Math.round(r.height * dpr));
+  }
+  new ResizeObserver(resize).observe(canvas);
+  resize();
+
+  function frame(ms) {
+    const W = canvas.width, H = canvas.height, t = ms / 1000;
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    const L = lines(Date.now());
+    const gaps = L.length === 3 ? [-0.28, 0.0, 0.27] : [-0.12, 0.12];
+    const flick = reduced ? 1 : 0.94 + Math.random() * 0.06;
+    L.forEach(([text, size], i) => {
+      const { out, k } = layout(text, size, H * (0.5 + gaps[i]), W, H);
+      for (const s of out) {
+        const hue = ((s.u * 0.5 + (reduced ? 0 : t * 0.15)) % 1) * 360;
+        const col = `hsla(${hue},100%,${58 * flick}%,`;
+        for (const [w, a, blur] of [[k * 0.09, 0.18, k * 0.35], [k * 0.035, 0.55, k * 0.12], [Math.max(1.2 * dpr, k * 0.012), 1, 0]]) {
+          ctx.shadowBlur = blur; ctx.shadowColor = col + '0.9)';
+          ctx.strokeStyle = col + a + ')'; ctx.lineWidth = w;
+          ctx.beginPath();
+          s.pts.forEach(([x, y], j) => (j ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+          ctx.stroke();
+        }
+      }
+    });
+    ctx.shadowBlur = 0;
+  }
+  function loop(ms) { frame(ms); requestAnimationFrame(loop); }
+  frame(performance.now());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

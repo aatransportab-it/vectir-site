@@ -9,6 +9,7 @@ NAV = [
     ("/iluminat-festiv-laser/", "Iluminat festiv"),
     ("/alternativa-artificii/", "În loc de artificii"),
     ("/cat-costa-spectacol-laser/", "Cât costă"),
+    ("/revelion/", "Numărătoarea"),
 ]
 
 ORG = {
