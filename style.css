@@ -337,3 +337,37 @@ p, li, dd, figcaption { text-wrap: pretty; }
 .lessons-fold > summary:hover { border-bottom-color: var(--gold); }
 .lessons-fold > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 .lessons-fold dl.lessons { margin-top: 1.6rem; }
+
+  /* ---------- Inner pages (one per question a town hall actually types) ---------- */
+
+  .top { border-bottom: 1px solid var(--edge); }
+  .top .shell { display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    flex-wrap: wrap; padding-block: 1rem; }
+  .top a.home { font: 300 1.5rem/1 Newsreader, Georgia, serif; color: var(--snow); text-decoration: none; }
+  .top a.home span { color: var(--gold); }
+  .top nav { display: flex; flex-wrap: wrap; gap: .4rem 1.1rem; font-size: .9rem; }
+  .top nav a { color: var(--muted); text-decoration: none; }
+  .top nav a:hover, .top nav a[aria-current="page"] { color: var(--gold); }
+
+  .page-head { padding: 3.5rem 0 2.5rem; border-bottom: 1px solid var(--edge); }
+  .page-head h1 { font: 300 clamp(2rem, 6vw, 3.1rem)/1.1 Newsreader, Georgia, serif;
+    margin: 0 0 1.2rem; text-wrap: balance; max-width: 40rem; }
+  .page-head .lead { max-width: 38rem; }
+
+  .facts-table { overflow-x: auto; margin-top: 1.4rem; }
+  .facts-table table { border-collapse: collapse; width: 100%; min-width: 30rem; font-size: .95rem; }
+  .facts-table th, .facts-table td { text-align: left; padding: .65rem .8rem; border-bottom: 1px solid var(--edge);
+    vertical-align: top; }
+  .facts-table th { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .facts-table td.num { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--gold); }
+
+  .faq { display: grid; gap: 1.6rem; max-width: 42rem; }
+  .faq h3 { font-size: 1.05rem; color: var(--snow); }
+  .faq p { color: var(--muted); }
+
+  .more { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.2rem; margin-top: 1.6rem; }
+  .more a { display: block; background: var(--raised); border: 1px solid var(--edge); border-radius: 4px;
+    padding: 1.2rem 1.3rem; color: var(--snow); text-decoration: none; }
+  .more a:hover { border-color: var(--gold); }
+  .more a b { display: block; font: 400 1.2rem/1.25 Newsreader, Georgia, serif; margin-bottom: .4rem; }
+  .more a span { color: var(--muted); font-size: .92rem; }
