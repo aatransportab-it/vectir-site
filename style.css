@@ -371,3 +371,29 @@ p, li, dd, figcaption { text-wrap: pretty; }
   .more a:hover { border-color: var(--gold); }
   .more a b { display: block; font: 400 1.2rem/1.25 Newsreader, Georgia, serif; margin-bottom: .4rem; }
   .more a span { color: var(--muted); font-size: .92rem; }
+
+  /* ---------- The show first: real footage in the hero ---------- */
+
+  .hero-vid { position: absolute; top: 0; right: 0; height: 100%; aspect-ratio: 9 / 16;
+    object-fit: cover; opacity: .9; }
+  .hero-vid + .hero-veil { pointer-events: none; }
+  section.first-look { padding-top: 3rem; }
+
+  /* Phones are held upright and so is the footage: let it fill the screen. */
+  @media (max-width: 48rem) {
+    .hero-img { display: none; }
+    .hero { height: 82svh; min-height: 30rem; }
+    .hero-vid { inset: 0; width: 100%; height: 100%; aspect-ratio: auto; opacity: 1; }
+    .hero-veil { background: linear-gradient(180deg, rgba(10,15,30,.15) 0%, rgba(10,15,30,0) 45%, rgba(10,15,30,.92) 100%); }
+  }
+
+  /* The WhatsApp button next to the name field must wrap on a narrow phone,
+     or it pushes the whole page sideways. */
+  .demo-row .go { white-space: normal; text-align: center; justify-content: center; flex: 1 1 12rem; }
+  @media (min-width: 48.01rem) {
+    .hero-vid { z-index: 1; opacity: 1;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 35%);
+              mask-image: linear-gradient(90deg, transparent 0, #000 35%); }
+    .hero-text { z-index: 2; }
+  }
+  .first-look .plates { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }

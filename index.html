@@ -21,6 +21,8 @@
 
 <header class="hero">
   <img class="hero-img" src="img/hero.jpg" alt="Un nume desenat cu laser pe fațada unei clădiri, noaptea">
+  <video class="hero-vid" src="img/show.mp4" poster="img/show-poster.jpg" autoplay muted loop playsinline preload="auto"
+    aria-label="Filmare reală: brad, Moș Crăciun, stea, casă și bandă festivă desenate cu laser pe o clădire"></video>
   <div class="hero-veil"></div>
   <canvas id="heroBeams" aria-hidden="true"></canvas>
   <div class="hero-text"><div class="hero-inner">
@@ -32,6 +34,36 @@
 </header>
 
 <main class="shell">
+
+  <section class="first-look">
+    <p class="kicker">Ce s-a proiectat până acum</p>
+    <h2>Fotografii, nu randări.</h2>
+    <p class="muted">Toate cadrele de mai jos sunt filmate pe clădiri și ziduri reale, cu
+      proiectorul din dotare. Le arătăm așa cum au ieșit, fără prelucrare.</p>
+    <div class="plates">
+      <figure>
+        <img src="img/nume.jpg" alt="Numele PETROȘANI desenat cu laser pe un zid">
+        <figcaption><b>Un nume, pe un zid.</b> Fiecare literă e un singur traseu al razei, fără
+          umpluturi — și diacriticele sunt corecte: Ș cu virgulă dedesubt, nu cu sedilă. Un detaliu
+          pe care jumătate din firmele luminoase din țară îl greșesc.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/brad.jpg" alt="Brad de Crăciun desenat cu laser pe fațada unei clădiri">
+        <figcaption><b>Brad pe fațadă.</b> Deasupra lui, în stânga, se vede ghirlanda obișnuită a
+          blocului — pentru scară.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/banda.jpg" alt="Bandă cu brazi și stele, proiectată pe muchia unui acoperiș">
+        <figcaption><b>Bandă pe streașină.</b> O fâșie lungă, deasupra ferestrelor — forma care se
+          montează cel mai des pe clădiri.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/cub.jpg" alt="Cub tridimensional desenat cu laser pe un perete">
+        <figcaption><b>Volum aparent.</b> Un desen plat care se citește tridimensional, fiindcă
+          se rotește.</figcaption>
+      </figure>
+    </div>
+  </section>
 
   <section class="scene">
     <h2>Se stinge lumina. Rămâne numele.</h2>
@@ -226,35 +258,6 @@
     </div>
   </section>
 
-  <section>
-    <p class="kicker">Ce s-a proiectat până acum</p>
-    <h2>Fotografii, nu randări.</h2>
-    <p class="muted">Toate cadrele de mai jos sunt filmate pe clădiri și ziduri reale, cu
-      proiectorul din dotare. Le arătăm așa cum au ieșit, fără prelucrare.</p>
-    <div class="plates">
-      <figure>
-        <img src="img/nume.jpg" alt="Numele PETROȘANI desenat cu laser pe un zid">
-        <figcaption><b>Un nume, pe un zid.</b> Fiecare literă e un singur traseu al razei, fără
-          umpluturi — și diacriticele sunt corecte: Ș cu virgulă dedesubt, nu cu sedilă. Un detaliu
-          pe care jumătate din firmele luminoase din țară îl greșesc.</figcaption>
-      </figure>
-      <figure>
-        <img src="img/brad.jpg" alt="Brad de Crăciun desenat cu laser pe fațada unei clădiri">
-        <figcaption><b>Brad pe fațadă.</b> Deasupra lui, în stânga, se vede ghirlanda obișnuită a
-          blocului — pentru scară.</figcaption>
-      </figure>
-      <figure>
-        <img src="img/banda.jpg" alt="Bandă cu brazi și stele, proiectată pe muchia unui acoperiș">
-        <figcaption><b>Bandă pe streașină.</b> O fâșie lungă, deasupra ferestrelor — forma care se
-          montează cel mai des pe clădiri.</figcaption>
-      </figure>
-      <figure>
-        <img src="img/cub.jpg" alt="Cub tridimensional desenat cu laser pe un perete">
-        <figcaption><b>Volum aparent.</b> Un desen plat care se citește tridimensional, fiindcă
-          se rotește.</figcaption>
-      </figure>
-    </div>
-  </section>
 
   <section>
     <div class="safety">
@@ -315,6 +318,12 @@
 
 </main>
 
+<script>
+  // Reduced motion: keep the footage on its first frame instead of looping it.
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const v = document.querySelector('.hero-vid'); if (v) { v.removeAttribute('autoplay'); v.pause(); }
+  }
+</script>
 <script src="glyphs.js"></script>
 <script src="hero.js"></script>
 <script src="beams.js"></script>
