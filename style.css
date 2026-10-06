@@ -397,3 +397,14 @@ p, li, dd, figcaption { text-wrap: pretty; }
     .hero-text { z-index: 2; }
   }
   .first-look .plates { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+
+  /* On a phone the contact is a thumb away at every scroll position, not only at the end. */
+  .wa-float { display: none; }
+  @media (max-width: 48rem) {
+    .wa-float { display: inline-flex; align-items: center; position: fixed; z-index: 10;
+      right: 1rem; bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem);
+      font: 600 .95rem Archivo, sans-serif; color: #17140A; background: var(--gold);
+      border-radius: 999px; padding: .75rem 1.15rem; text-decoration: none;
+      box-shadow: 0 6px 22px rgba(0,0,0,.45); }
+    body { padding-bottom: 4.5rem; }
+  }
