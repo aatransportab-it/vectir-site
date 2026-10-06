@@ -19,21 +19,30 @@
 </head>
 <body style="margin:0">
 
-<header class="hero">
-  <img class="hero-img" src="img/hero.jpg" alt="Un nume desenat cu laser pe fațada unei clădiri, noaptea">
-  <video class="hero-vid" src="img/show.mp4" poster="img/show-poster.jpg" autoplay muted loop playsinline preload="auto"
-    aria-label="Filmare reală: brad, Moș Crăciun, stea, casă și bandă festivă desenate cu laser pe o clădire"></video>
-  <div class="hero-veil"></div>
-  <canvas id="heroBeams" aria-hidden="true"></canvas>
-  <div class="hero-text"><div class="hero-inner">
-    <h1 class="mark visually-hidden">Luceafărul</h1>
-    <canvas id="heroLaser" aria-hidden="true"></canvas>
-    <p class="tagline">Momentul în care toată sala se uită în același loc.<br>
-      <span class="sub">Laser show personalizat · concerte, festivaluri, evenimente, orașe</span></p>
-  </div></div>
+<header class="show">
+  <canvas id="show" aria-hidden="true"></canvas>
+  <p class="show-brand">Luce<span>a</span>fărul</p>
+  <h1 class="visually-hidden">Luceafărul — numele orașului, scris cu laser pe clădire</h1>
+  <div class="show-ui">
+    <p class="show-line">Numele orașului dumneavoastră,<br><em>scris cu lumină</em> pe clădire.</p>
+    <form class="show-try" id="tryForm" autocomplete="off">
+      <label class="visually-hidden" for="tryName">Numele orașului</label>
+      <input id="tryName" type="text" maxlength="18" placeholder="Scrieți numele orașului" enterkeyhint="go">
+      <button type="submit">Desenează</button>
+    </form>
+    <a class="show-wa" id="tryWa" href="https://wa.me/40741447101?text=Bun%C4%83%20ziua.%20A%C8%99%20vrea%20numele%20ora%C8%99ului%20scris%20cu%20laser%20pe%20o%20cl%C4%83dire." rel="noopener">Vreau asta pe clădirea noastră →</a>
+    <p class="show-note">Desen în timp real, cu fontul proiectorului. Filmările reale sunt mai jos.</p>
+  </div>
 </header>
 
 <main class="shell">
+
+  <section class="filmed">
+    <p class="kicker">Filmat, nu simulat</p>
+    <h2>Pe o clădire adevărată, cu proiectorul nostru.</h2>
+    <video class="filmed-vid" src="img/show.mp4" poster="img/show-poster.jpg" autoplay muted loop playsinline preload="metadata"
+      aria-label="Filmare reală: brad, Moș Crăciun, stea, casă și bandă festivă desenate cu laser pe o clădire"></video>
+  </section>
 
   <section class="first-look">
     <p class="kicker">Ce s-a proiectat până acum</p>
@@ -324,12 +333,11 @@
 <script>
   // Reduced motion: keep the footage on its first frame instead of looping it.
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const v = document.querySelector('.hero-vid'); if (v) { v.removeAttribute('autoplay'); v.pause(); }
+    const v = document.querySelector('.filmed-vid'); if (v) { v.removeAttribute('autoplay'); v.pause(); }
   }
 </script>
 <script src="glyphs.js"></script>
-<script src="hero.js"></script>
-<script src="beams.js"></script>
+<script src="show.js"></script>
 <script src="verse.js"></script>
 <script src="sim.js"></script>
 <script src="link.js"></script>

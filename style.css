@@ -408,3 +408,38 @@ p, li, dd, figcaption { text-wrap: pretty; }
       box-shadow: 0 6px 22px rgba(0,0,0,.45); }
     body { padding-bottom: 4.5rem; }
   }
+
+  /* ---------- The show: a beam writing a town's name, first thing on screen ---------- */
+
+  .show { position: relative; height: 100svh; min-height: 34rem; max-height: 62rem; overflow: hidden;
+    background: #05070f; border-bottom: 1px solid var(--edge); }
+  #show { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .show-brand { position: absolute; top: calc(env(safe-area-inset-top, 0px) + 1.1rem); left: 1.4rem; margin: 0;
+    font: 300 1.45rem/1 Newsreader, Georgia, serif; color: var(--snow); letter-spacing: .02em; z-index: 2; }
+  .show-brand span { color: var(--gold); }
+  .show-ui { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+    padding: 4rem 1.4rem calc(env(safe-area-inset-bottom, 0px) + 1.6rem);
+    background: linear-gradient(180deg, rgba(5,7,15,0) 0%, rgba(5,7,15,.82) 38%, #05070f 100%);
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: .9rem; }
+  .show-line { margin: 0; max-width: 26rem; font: 400 clamp(1.35rem, 5.4vw, 2rem)/1.2 Newsreader, Georgia, serif;
+    color: var(--snow); text-wrap: balance; }
+  .show-line em { font-style: italic; color: var(--gold); }
+  .show-try { display: flex; gap: .5rem; width: 100%; max-width: 26rem; }
+  .show-try input { flex: 1 1 auto; min-width: 0; font: 500 1rem Archivo, sans-serif; letter-spacing: .03em;
+    text-transform: uppercase; color: var(--snow); background: rgba(17,26,46,.85);
+    border: 1px solid var(--edge); border-radius: 999px; padding: .85rem 1.1rem; }
+  .show-try input::placeholder { text-transform: none; letter-spacing: 0; color: var(--muted); }
+  .show-try input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .show-try button { flex: 0 0 auto; font: 600 1rem Archivo, sans-serif; color: #17140A; background: var(--gold);
+    border: 0; border-radius: 999px; padding: .85rem 1.2rem; cursor: pointer; }
+  .show-wa { color: var(--gold); font-weight: 600; text-decoration: none; font-size: .98rem; }
+  .show-note { margin: 0; color: var(--muted); font-size: .76rem; }
+
+  section.filmed { text-align: center; }
+  section.filmed p, section.filmed h2 { margin-left: auto; margin-right: auto; }
+  .filmed-vid { display: block; margin: 0 auto; width: min(100%, 22rem); aspect-ratio: 9 / 16;
+    object-fit: cover; border-radius: 6px; border: 1px solid var(--edge); background: #000; }
+
+  /* The floating WhatsApp button would sit on top of the hero's own call to action. */
+  @media (max-width: 48rem) { .wa-float { transition: opacity .2s; } }
+  .wa-float.away { opacity: 0; pointer-events: none; }
