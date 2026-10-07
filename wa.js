@@ -12,11 +12,13 @@
   const inApp = /FBAN|FBAV|FB_IAB|FBIOS|Instagram|Messenger/i.test(ua);
   if (!inApp) return;
 
-  function hint(phone) {
-    if (document.getElementById('waHint')) return;
+  function hint(phone, copied) {
+    const old = document.getElementById('waHint'); if (old) old.remove();
     const p = document.createElement('p');
     p.id = 'waHint';
-    p.innerHTML = 'Dacă WhatsApp nu s-a deschis: apăsați ⋯ sus, apoi „Deschide în browser”, și încercați din nou.'
+    p.innerHTML = (copied
+        ? '<b style="color:#F0BE45">Mesajul e copiat.</b> Deschideți WhatsApp, alegeți conversația și lipiți-l. '
+        : 'Dacă WhatsApp nu s-a deschis: apăsați ⋯ sus, apoi „Deschide în browser”, și încercați din nou.')
       + (phone ? ' Sau sunați direct: <a href="tel:+' + phone + '" style="color:#F0BE45">+40 741 447 101</a>' : '');
     p.style.cssText = 'position:fixed;left:1rem;right:1rem;bottom:calc(env(safe-area-inset-bottom,0px) + 5rem);z-index:20;'
       + 'margin:0;padding:.9rem 1rem;border-radius:8px;background:#111A2E;color:#EDF1F8;border:1px solid #F0BE45;'
@@ -39,11 +41,15 @@
       navigator.share({ text }).catch(() => {});
       return;
     }
+    // No share sheet either: put the message on the clipboard first, so even if
+    // the app refuses to open, pasting it into WhatsApp is one step away.
+    let copied = false;
+    try { navigator.clipboard.writeText(phone ? '' : text).then(() => { copied = !phone; }, () => {}); } catch (err) {}
     let left = false;
     const away = () => { left = true; };
     document.addEventListener('visibilitychange', away, { once: true });
     window.addEventListener('pagehide', away, { once: true });
     location.href = scheme;
-    setTimeout(() => { if (!left && document.visibilityState === 'visible') hint(phone); }, 1600);
+    setTimeout(() => { if (!left && document.visibilityState === 'visible') hint(phone, copied); }, 1600);
   }, true);
 })();
