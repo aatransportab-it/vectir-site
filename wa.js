@@ -15,6 +15,11 @@
   if (!inApp) return;
 
   const PHONE_SHOWN = '+40 741 447 101';
+  const MESSENGER = 'https://m.me/61594856923324';     // the Luceafărul page
+  const BTN = 'display:block;text-align:center;margin:.6rem 0 0;font:600 1rem Archivo,sans-serif;'
+    + 'color:#17140A;background:#F0BE45;border-radius:999px;padding:.85rem;text-decoration:none';
+  const BTN2 = 'display:block;text-align:center;margin:.6rem 0 0;font:600 1rem Archivo,sans-serif;'
+    + 'color:#EDF1F8;border:1px solid #2A3654;border-radius:999px;padding:.8rem;text-decoration:none';
 
   function copy(text) {
     const ta = document.createElement('textarea');
@@ -53,19 +58,22 @@
     const text = url.searchParams.get('text') || '';
 
     if (!phone) {
+      // Inside Facebook, Facebook's own share works: post it, or send it to a
+      // friend on Messenger from the same dialog. WhatsApp gets the copied text.
+      const link = (text.match(/https?:\/\/\S+/) || [location.href])[0];
       const ok = copy(text);
-      panel((ok
-          ? '<p style="margin:0 0 .6rem"><b style="color:#F0BE45">✓ Mesajul e copiat.</b></p>'
-            + '<p style="margin:0">Deschideți WhatsApp, alegeți conversația și <b>lipiți</b> mesajul (apăsați lung în câmpul de scris → Lipește).</p>'
-          : '<p style="margin:0 0 .6rem">Facebook nu lasă paginile să deschidă WhatsApp. Copiați mesajul de mai jos și lipiți-l în WhatsApp:</p>')
-        + '<p style="margin:.8rem 0 0;padding:.7rem;border-radius:8px;background:#0A0F1E;font-size:.9rem;user-select:all;-webkit-user-select:all;word-break:break-word">'
+      panel('<p style="margin:0;font-weight:600">Trimiteți numărătoarea prietenilor:</p>'
+        + '<a style="' + BTN + '" href="https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(link) + '">Pe Facebook sau Messenger</a>'
+        + '<p style="margin:1rem 0 0;font-size:.92rem;color:#C9D1E3">' + (ok
+            ? '<b style="color:#F0BE45">Pentru WhatsApp, mesajul e deja copiat:</b> deschideți WhatsApp și lipiți-l.'
+            : 'Pentru WhatsApp, copiați mesajul de mai jos și lipiți-l acolo:') + '</p>'
+        + '<p style="margin:.5rem 0 0;padding:.6rem;border-radius:8px;background:#0A0F1E;font-size:.85rem;user-select:all;-webkit-user-select:all;word-break:break-word">'
         + text.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</p>');
     } else {
-      panel('<p style="margin:0 0 .6rem">Facebook nu lasă paginile să deschidă WhatsApp.</p>'
-        + '<p style="margin:0 0 .8rem">Ne găsiți direct la numărul:</p>'
-        + '<a href="tel:+' + phone + '" style="display:block;text-align:center;font:600 1.3rem Archivo,sans-serif;color:#F0BE45;text-decoration:none;padding:.4rem 0">' + PHONE_SHOWN + '</a>'
-        + '<p style="margin:.6rem 0 0;color:#8A94AB;font-size:.9rem">Apăsați pe număr ca să sunați, sau scrieți-ne pe WhatsApp la același număr. '
-        + 'Pentru butoanele directe: ⋯ sus → „Deschide în browser”.</p>');
+      panel('<p style="margin:0;font-weight:600">Scrieți-ne direct:</p>'
+        + '<a style="' + BTN + '" href="' + MESSENGER + '">Pe Messenger</a>'
+        + '<a style="' + BTN2 + '" href="tel:+' + phone + '">Sunați: ' + PHONE_SHOWN + '</a>'
+        + '<p style="margin:.8rem 0 0;color:#8A94AB;font-size:.88rem">Pe WhatsApp ne găsiți la același număr.</p>');
     }
   }, true);
 })();
