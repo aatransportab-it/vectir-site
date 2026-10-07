@@ -53,10 +53,10 @@
 <div class="shell town">
   <form id="townForm" autocomplete="off">
     <label class="visually-hidden" for="townName">Orașul dumneavoastră</label>
-    <input id="townName" maxlength="16" placeholder="Scrieți orașul dumneavoastră" enterkeyhint="go">
+    <input id="townName" type="search" maxlength="16" placeholder="Scrieți orașul dumneavoastră" enterkeyhint="done" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
     <button type="submit">Numărătoarea mea</button>
   </form>
-  <div class="share" id="share" hidden>
+  <div class="share" id="share">
     <a class="go" id="shareWa" href="#" rel="noopener">Trimite pe WhatsApp</a>
     <button type="button" id="shareCopy">Copiază linkul</button>
   </div>
@@ -163,22 +163,27 @@
 
   const form = document.getElementById('townForm'), input = document.getElementById('townName');
   const share = document.getElementById('share'), wa = document.getElementById('shareWa'), copy = document.getElementById('shareCopy');
+  // The town applies as it is typed - no button to find - and the share links are
+  // always live: with a town they carry it, without one they carry the page.
   function setTown(name) {
     town = clean(name);
-    if (!town) return;
-    history.replaceState(null, '', '#' + encodeURIComponent(town.toLowerCase()));
+    const base = location.href.split('#')[0];
+    history.replaceState(null, '', town ? '#' + encodeURIComponent(town.toLowerCase()) : base);
     const url = location.href;
-    wa.href = 'https://wa.me/?text=' + encodeURIComponent(`Numărătoarea până la Revelion, pentru ${town}, desenată cu laser: ${url}`);
-    share.hidden = false;
-    document.title = `${town}: câte zile până la Revelion | Luceafărul`;
+    wa.href = 'https://wa.me/?text=' + encodeURIComponent(town
+      ? `Numărătoarea până la Revelion, pentru ${town}, desenată cu laser: ${url}`
+      : `Câte zile mai sunt până la Revelion? Numărătoarea desenată cu laser: ${url}`);
+    document.title = town ? `${town}: câte zile până la Revelion | Luceafărul`
+                          : 'Câte zile până la Revelion? Numărătoare inversă desenată cu laser | Luceafărul';
   }
+  input.addEventListener('input', () => setTown(input.value));
   form.addEventListener('submit', (e) => { e.preventDefault(); setTown(input.value); input.blur(); });
   copy.addEventListener('click', () => {
     const done = () => { copy.textContent = 'Link copiat'; setTimeout(() => (copy.textContent = 'Copiază linkul'), 1800); };
     if (navigator.share) { navigator.share({ title: document.title, url: location.href }).catch(() => {}); return; }
     navigator.clipboard?.writeText(location.href).then(done, () => {});
   });
-  if (town) { input.value = town; setTown(town); }
+  input.value = town; setTown(town);
 
   let dpr = 1;
   function resize() {
