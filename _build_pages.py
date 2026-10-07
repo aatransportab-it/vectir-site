@@ -124,7 +124,7 @@ def page(slug, title, desc, h1, lead, body, faq, more_slugs):
   </section>
 {CONTACT.format(wa=wa, subj=subj)}{FOOT}
 </main>
-<script src="/wa.js?v=3"></script>
+<script src="/wa.js?v=4"></script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{{"token": "c10756ce93a645f2bd230e4c76122468"}}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
