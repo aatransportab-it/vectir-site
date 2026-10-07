@@ -24,6 +24,18 @@
   .count .note { position: absolute; left: 0; right: 0; bottom: 1rem; text-align: center;
     color: var(--muted); font-size: .85rem; margin: 0 auto; }
   .readout { font-variant-numeric: tabular-nums; }
+  .town { padding-block: 1.4rem 0; display: flex; flex-direction: column; align-items: center; gap: .8rem; }
+  .town form { display: flex; gap: .5rem; width: 100%; max-width: 28rem; }
+  .town input { flex: 1 1 auto; min-width: 0; font: 500 1rem Archivo, sans-serif; letter-spacing: .03em;
+    text-transform: uppercase; color: var(--snow); background: var(--raised); border: 1px solid var(--edge);
+    border-radius: 999px; padding: .85rem 1.1rem; }
+  .town input::placeholder { text-transform: none; letter-spacing: 0; color: var(--muted); }
+  .town input:focus-visible, .town button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .town form button { flex: 0 0 auto; font: 600 1rem Archivo, sans-serif; color: #17140A; background: var(--gold);
+    border: 0; border-radius: 999px; padding: .85rem 1.15rem; cursor: pointer; }
+  .share { display: flex; flex-wrap: wrap; gap: .6rem; justify-content: center; }
+  .share button { font: 500 .95rem Archivo, sans-serif; color: var(--snow); background: transparent;
+    border: 1px solid var(--edge); border-radius: 3px; padding: .8rem 1.1rem; cursor: pointer; }
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://vectir.ro/revelion/","url":"https://vectir.ro/revelion/","name":"Câte zile până la Revelion? Numărătoare inversă desenată cu laser","inLanguage":"ro","about":{"@id":"https://vectir.ro/#firma"}},{"@type":"LocalBusiness","@id":"https://vectir.ro/#firma","name":"Luceafărul","url":"https://vectir.ro/","telephone":"+40741447101","address":{"@type":"PostalAddress","addressLocality":"Petroșani","addressRegion":"Hunedoara","addressCountry":"RO"}}]}</script>
 </head>
@@ -37,6 +49,17 @@
 <div class="count">
   <canvas id="laser" aria-hidden="true"></canvas>
   <p class="note">Ora României · desenat cu fontul proiectorului, o singură rază</p>
+</div>
+<div class="shell town">
+  <form id="townForm" autocomplete="off">
+    <label class="visually-hidden" for="townName">Orașul dumneavoastră</label>
+    <input id="townName" maxlength="16" placeholder="Scrieți orașul dumneavoastră" enterkeyhint="go">
+    <button type="submit">Numărătoarea mea</button>
+  </form>
+  <div class="share" id="share" hidden>
+    <a class="go" id="shareWa" href="#" rel="noopener">Trimite pe WhatsApp</a>
+    <button type="button" id="shareCopy">Copiază linkul</button>
+  </div>
 </div>
 
 <main class="shell">
@@ -101,18 +124,23 @@
   }
   const pad = (n) => String(n).padStart(2, '0');
 
+  const clean = (v) => [...v.toUpperCase()].filter((c) => c === ' ' || GLYPHS[c]).join('').trim().slice(0, 16);
+  let town = '';
+  try { town = clean(decodeURIComponent(location.hash.slice(1))); } catch (e) {}
+
   function lines(now) {
     const t = target(now);
     const left = t - now;
     if (left <= 0) {
       const year = new Date(t + 3600000 * 3).getUTCFullYear();
-      readout.textContent = `La mulți ani ${year}!`;
-      return [['LA MULȚI ANI', 0.13], [String(year) + '!', 0.3]];
+      readout.textContent = `La mulți ani ${year}${town ? ', ' + town : ''}!`;
+      return town ? [['LA MULȚI ANI', 0.12], [town, 0.16], [String(year) + '!', 0.2]]
+                  : [['LA MULȚI ANI', 0.13], [String(year) + '!', 0.3]];
     }
     const s = Math.floor(left / 1000);
     const d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), sec = s % 60;
-    readout.textContent = `Mai sunt ${d} ${d === 1 ? 'zi' : 'zile'}, ${h} ore, ${m} minute și ${sec} secunde până la Revelion, ora României.`;
-    return [['PÂNĂ LA REVELION', 0.075], [`${d} ${d === 1 ? 'ZI' : 'ZILE'}`, 0.2], [`${pad(h)}:${pad(m)}:${pad(sec)}`, 0.15]];
+    readout.textContent = `Mai sunt ${d} ${d === 1 ? 'zi' : 'zile'}, ${h} ore, ${m} minute și ${sec} secunde până la Revelion${town ? ' la ' + town : ''}, ora României.`;
+    return [[town || 'PÂNĂ LA REVELION', town ? 0.11 : 0.075], [`${d} ${d === 1 ? 'ZI' : 'ZILE'}`, 0.2], [`${pad(h)}:${pad(m)}:${pad(sec)}`, 0.15]];
   }
 
   function layout(text, size, cy, W, H) {
@@ -132,6 +160,25 @@
     });
     return { out, k };
   }
+
+  const form = document.getElementById('townForm'), input = document.getElementById('townName');
+  const share = document.getElementById('share'), wa = document.getElementById('shareWa'), copy = document.getElementById('shareCopy');
+  function setTown(name) {
+    town = clean(name);
+    if (!town) return;
+    history.replaceState(null, '', '#' + encodeURIComponent(town.toLowerCase()));
+    const url = location.href;
+    wa.href = 'https://wa.me/?text=' + encodeURIComponent(`Numărătoarea până la Revelion, pentru ${town}, desenată cu laser: ${url}`);
+    share.hidden = false;
+    document.title = `${town}: câte zile până la Revelion | Luceafărul`;
+  }
+  form.addEventListener('submit', (e) => { e.preventDefault(); setTown(input.value); input.blur(); });
+  copy.addEventListener('click', () => {
+    const done = () => { copy.textContent = 'Link copiat'; setTimeout(() => (copy.textContent = 'Copiază linkul'), 1800); };
+    if (navigator.share) { navigator.share({ title: document.title, url: location.href }).catch(() => {}); return; }
+    navigator.clipboard?.writeText(location.href).then(done, () => {});
+  });
+  if (town) { input.value = town; setTown(town); }
 
   let dpr = 1;
   function resize() {
